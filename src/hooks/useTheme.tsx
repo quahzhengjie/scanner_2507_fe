@@ -1,4 +1,3 @@
-
 // =================================================================================
 // FILE: src/hooks/useTheme.tsx
 // =================================================================================
@@ -14,11 +13,10 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true); // default to dark
 
   useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark');
-    setDarkMode(isDark);
+    document.documentElement.classList.add('dark'); // force dark mode on mount
   }, []);
 
   const toggleDarkMode = () => {

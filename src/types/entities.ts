@@ -15,10 +15,10 @@
 import type { CaseStatus, RiskLevel, DocStatus } from './enums';
 
 // --- Core Data Models ---
+// In your entities.ts file, update the Case interface entity property:
 
 export interface Case {
   caseId: string;
-  // CORRECTED: Using specific union types instead of generic 'string'
   status: CaseStatus;
   riskLevel: RiskLevel;
   createdDate: string;
@@ -39,6 +39,11 @@ export interface Case {
     addressCountry: string;
     placeOfIncorporation: string;
     usFatcaClassificationFinal: string;
+    // NEW FIELDS
+    businessActivity?: string;
+    contactPerson?: string;
+    contactEmail?: string;
+    contactPhone?: string;
     creditDetails?: CreditDetails;
   };
   relatedPartyLinks: {
@@ -74,20 +79,18 @@ export interface Document {
 export interface DocumentVersion {
   id: string;
   version: number;
-  // CORRECTED: Using specific union type
   status: DocStatus;
   uploadedDate: string;
   fileRef: string;
-  expiryDate?: string;
-  mimeType: string;
+  mimeType?: string;
   fileSize?: number;
-  fileHash?: string;
+  expiryDate?: string;
   uploadedBy?: string;
   verifiedBy?: string;
   verifiedDate?: string;
   rejectionReason?: string;
   comments?: string;
-  scanDetails?: Record<string, string>;
+  isCurrentForCase?: boolean;
 }
 
 
@@ -98,7 +101,6 @@ export interface CaseDocumentLink {
   caseId: string;
   documentId: string;
   versionId: string;
-  // CORRECTED: Using specific union type
   status: DocStatus;
   comments?: string;
 }
@@ -110,10 +112,17 @@ export interface CreditDetails {
 }
 
 export interface CallReport {
-    reportId: string;
-    callDate: string;
-    summary: string;
-    nextSteps: string;
+  reportId: string;
+  callDate: string;
+  summary: string;
+  nextSteps: string;
+  // Add these optional fields:
+  callType?: 'Inbound' | 'Outbound' | 'Meeting' | 'Email';
+  duration?: number;
+  attendees?: string[];
+  outcome?: 'Positive' | 'Neutral' | 'Negative' | 'Follow-up Required';
+  createdBy?: string;
+  createdDate?: string;
 }
 
 export interface ActivityLog {
@@ -147,6 +156,20 @@ export interface CaseCreationData {
   entityType: string;
   riskLevel: RiskLevel;
   status: CaseStatus;
+  // Complete entity details
+  entity?: {
+    basicNumber?: string;
+    cisNumber?: string;
+    taxId: string;
+    address1: string;
+    address2?: string;
+    addressCountry: string;
+    placeOfIncorporation: string;
+    businessActivity?: string;
+    contactPerson?: string;
+    contactEmail?: string;
+    contactPhone?: string;
+  };
 }
 
 export interface User {
