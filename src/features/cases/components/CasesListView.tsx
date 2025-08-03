@@ -5,14 +5,11 @@
 
 import React, { useState, useMemo } from 'react';
 import { Plus, Search } from 'lucide-react';
-import type { Case, CaseCreationData } from '@/types/entities';
-import { useEnumStore } from '@/features/enums/useEnumStore';
+import type { Case, CaseCreationData, RiskLevel, CaseStatus } from '@/types/entities';import { useEnumStore } from '@/features/enums/useEnumStore';
 import Link from 'next/link';
 import { RiskBadge } from '@/components/common/RiskBadge';
 import { StatusBadge } from '@/components/common/StatusBadge';
-import { type RiskLevel, type CaseStatus } from '@/types/enums';
 import { NewCaseModal } from './NewCaseModal';
-// CORRECTED: Import the new, integrated 'createCase' function
 import { createCase } from '@/lib/apiClient';
 
 interface CasesListViewProps {

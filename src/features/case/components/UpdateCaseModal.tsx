@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { useEnumStore } from '@/features/enums/useEnumStore';
-import type { CaseStatus, RiskLevel } from '@/types/enums';
+import type { CaseStatus, RiskLevel } from '@/types/entities';
 
 interface UpdateCaseModalProps {
   isOpen: boolean;

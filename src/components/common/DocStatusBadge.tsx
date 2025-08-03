@@ -7,7 +7,7 @@ import React from 'react';
 import * as LucideIcons from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { DynamicIcon } from '@/components/common/DynamicIcon';
-import type { DocStatus } from '@/types/enums';
+import type { DocStatus } from '@/types/entities';
 
 // Define the shape of the configuration object for each badge style
 interface BadgeStyle {

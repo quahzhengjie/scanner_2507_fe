@@ -1,33 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { X, AlertCircle, Building2, FileText, MapPin, Hash } from 'lucide-react';
 import { getDocumentRequirements } from '@/lib/apiClient';
+import type { CaseCreationData } from '@/types/entities';
 
 interface NewCaseModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreate: (data: CaseCreationData) => void;
-}
-
-// This should match your backend's CaseCreationRequest structure
-interface CaseCreationData {
-  entityName: string;
-  entityType: string;
-  riskLevel: 'Low' | 'Medium' | 'High';
-  status: 'Prospect' | 'KYC Review' | 'Pending Approval' | 'Active' | 'Rejected';
-  entity: {
-    basicNumber: string;
-    cisNumber: string | null;
-    taxId: string;
-    address1: string;
-    address2: string | null;
-    addressCountry: string;
-    placeOfIncorporation: string;
-    // These fields belong here, not in additionalInfo
-    businessActivity: string | null;
-    contactPerson: string | null;
-    contactEmail: string | null;
-    contactPhone: string | null;
-  };
 }
 
 interface FormData {

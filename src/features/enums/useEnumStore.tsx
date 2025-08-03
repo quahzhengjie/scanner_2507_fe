@@ -1,5 +1,5 @@
 // =================================================================================
-// FILE: src/features/enums/useEnumStore.tsx
+// UPDATE src/features/enums/useEnumStore.tsx - Add debugging
 // =================================================================================
 'use client';
 
@@ -14,17 +14,17 @@ import {
   type StoreApi,
   useStore,
 } from 'zustand';
-// CORRECTED: Import the final, correct types from our enums definition
-import type { Role, EnumConfig } from '@/types/enums';
+import type { Role, EnumConfig } from '@/types/entities';
 
-// CORRECTED: The state interface now matches the structure of EnumConfig
 export interface EnumState {
   roles: Record<string, Role>;
   enums: EnumConfig['enums'];
 }
 
-export const createEnumStore = (init: EnumState) =>
-  createStore<EnumState>(() => ({ ...init }));
+export const createEnumStore = (init: EnumState) => {
+  console.log('createEnumStore - Creating store with:', init);
+  return createStore<EnumState>(() => ({ ...init }));
+};
 
 const EnumStoreContext = createContext<StoreApi<EnumState> | null>(null);
 
@@ -35,6 +35,9 @@ export const EnumStoreProvider = ({
   children: ReactNode;
   initialState: EnumState;
 }) => {
+  console.log('EnumStoreProvider - Initial state:', initialState);
+  console.log('EnumStoreProvider - Roles keys:', Object.keys(initialState.roles || {}));
+  
   const storeRef = useRef<StoreApi<EnumState> | null>(null);
   if (!storeRef.current) {
     storeRef.current = createEnumStore(initialState);
@@ -50,5 +53,9 @@ export const EnumStoreProvider = ({
 export const useEnumStore = <T,>(selector: (s: EnumState) => T): T => {
   const ctx = useContext(EnumStoreContext);
   if (!ctx) throw new Error('useEnumStore must be used within EnumStoreProvider');
-  return useStore(ctx, selector);
+  
+  const result = useStore(ctx, selector);
+  console.log('useEnumStore - Selected value:', result);
+  
+  return result;
 };

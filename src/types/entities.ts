@@ -1,21 +1,21 @@
-// The Purpose of types/entities.ts
-
-// Think of the entities.ts file as the blueprint for the core "nouns" of our application. These are the fundamental business objects that the entire system revolves around.
-
-// Case: Represents an onboarding application.
-
-// Party: Represents a unique person (like a director or shareholder).
-
-// Document: Represents a master document file with all its versions.
-
-// These are our primary data models. If we were using a database, these interfaces would directly correspond to the main tables (e.g., a Cases table, a Parties table). The purpose of this file is to ensure that anytime we work with a "Case" in our code, it always has the same, predictable structure, which gives us type safety.
 // =================================================================================
-// FILE: src/types/entities.ts
+// FILE: src/types/index.ts
 // =================================================================================
-import type { CaseStatus, RiskLevel, DocStatus } from './enums';
+// This file combines all type definitions for the application, providing a single
+// source of truth for both enum types and entity interfaces.
 
-// --- Core Data Models ---
-// In your entities.ts file, update the Case interface entity property:
+// =================================================================================
+// ENUM TYPES - Static string literal unions for type safety
+// =================================================================================
+
+export type CaseStatus = 'KYC Review' | 'Pending Approval' | 'Active' | 'Rejected' | 'Prospect';
+export type RiskLevel = 'High' | 'Medium' | 'Low';
+export type DocStatus = 'Missing' | 'Submitted' | 'Verified' | 'Rejected' | 'Expired';
+export type RoleName = 'ROLE_MANAGER' | 'ROLE_PROCESSOR' | 'ROLE_VIEWER' | 'ROLE_COMPLIANCE' | 'ROLE_ADMIN';
+
+// =================================================================================
+// CORE ENTITY MODELS - The main business objects
+// =================================================================================
 
 export interface Case {
   caseId: string;
@@ -39,7 +39,6 @@ export interface Case {
     addressCountry: string;
     placeOfIncorporation: string;
     usFatcaClassificationFinal: string;
-    // NEW FIELDS
     businessActivity?: string;
     contactPerson?: string;
     contactEmail?: string;
@@ -93,8 +92,30 @@ export interface DocumentVersion {
   isCurrentForCase?: boolean;
 }
 
+// =================================================================================
+// USER & ROLE MANAGEMENT
+// =================================================================================
 
-// --- Supporting & Relational Types ---
+export interface User {
+  userId: string;
+  name: string;
+  email: string;
+  role: string;
+  department: string;
+  isActive: boolean;
+}
+
+// Single Role interface that works for both API responses and UI needs
+export interface Role {
+  id: number;                           // Database ID (required for admin functions)
+  name?: string;                        // Role name like "ROLE_ADMIN" (optional as it might be the key)
+  label: string;                        // Display label like "Administrator"
+  permissions: Record<string, boolean>; // Permission map
+}
+
+// =================================================================================
+// SUPPORTING TYPES
+// =================================================================================
 
 export interface CaseDocumentLink {
   linkId: string;
@@ -106,9 +127,9 @@ export interface CaseDocumentLink {
 }
 
 export interface CreditDetails {
-    creditLimit: number;
-    creditScore: string;
-    assessmentNotes: string;
+  creditLimit: number;
+  creditScore: string;
+  assessmentNotes: string;
 }
 
 export interface CallReport {
@@ -116,7 +137,6 @@ export interface CallReport {
   callDate: string;
   summary: string;
   nextSteps: string;
-  // Add these optional fields:
   callType?: 'Inbound' | 'Outbound' | 'Meeting' | 'Email';
   duration?: number;
   attendees?: string[];
@@ -126,22 +146,23 @@ export interface CallReport {
 }
 
 export interface ActivityLog {
-    activityId: string;
-    type: string;
-    timestamp: string;
-    performedBy: string;
-    details: string;
+  activityId: string;
+  type: string;
+  timestamp: string;
+  performedBy: string;
+  details: string;
 }
 
-
-// --- UI & Configuration Types ---
+// =================================================================================
+// UI & CONFIGURATION TYPES
+// =================================================================================
 
 export interface ScannerProfile {
-    id: string;
-    name: string;
-    resolution: string;
-    colorMode: string;
-    source: string;
+  id: string;
+  name: string;
+  resolution: string;
+  colorMode: string;
+  source: string;
 }
 
 export interface NewPartyData {
@@ -156,31 +177,20 @@ export interface CaseCreationData {
   entityType: string;
   riskLevel: RiskLevel;
   status: CaseStatus;
-  // Complete entity details
   entity?: {
-    basicNumber?: string;
-    cisNumber?: string;
+    basicNumber?: string | null;
+    cisNumber?: string | null;
     taxId: string;
     address1: string;
-    address2?: string;
+    address2?: string | null;  // Change to accept null
     addressCountry: string;
     placeOfIncorporation: string;
-    businessActivity?: string;
-    contactPerson?: string;
-    contactEmail?: string;
-    contactPhone?: string;
+    businessActivity?: string | null;  // Add these fields and accept null
+    contactPerson?: string | null;
+    contactEmail?: string | null;
+    contactPhone?: string | null;
   };
 }
-
-export interface User {
-  userId: string;
-  name: string;
-  email: string;
-  role: string;
-  department: string;
-  isActive: boolean;
-}
-
 
 export interface TemplateDoc {
   name: string;
@@ -190,14 +200,65 @@ export interface TemplateDoc {
 }
 
 export interface DocumentRequirements {
-individualTemplates: Record<string, TemplateDoc[]>;
-entityTemplates: Record<string, TemplateDoc[]>;
-bankFormTemplates: {
-  corporateMandatory: string[];
-  corporateOptional: string[];
-  individualStakeholder: string[];
-};
-riskBasedDocuments: Record<string, TemplateDoc[]>;
-entityRoleMapping: Record<string, string[]>;
+  individualTemplates: Record<string, TemplateDoc[]>;
+  entityTemplates: Record<string, TemplateDoc[]>;
+  bankFormTemplates: {
+    corporateMandatory: string[];
+    corporateOptional: string[];
+    individualStakeholder: string[];
+  };
+  riskBasedDocuments: Record<string, TemplateDoc[]>;
+  entityRoleMapping: Record<string, string[]>;
 }
 
+// =================================================================================
+// API CONFIGURATION TYPES
+// =================================================================================
+
+/**
+ * Configuration object returned by the API containing roles and enum values
+ */
+export interface EnumConfig {
+  roles: Record<string, Role>;  // Changed from Record<RoleName, Role> to be more flexible
+  enums: {
+    caseStatus: string[];
+    riskLevel: string[];
+    docStatus: string[];
+    entityTypes: string[];
+  };
+}
+
+// =================================================================================
+// ADDITIONAL TYPE UTILITIES (Optional but useful)
+// =================================================================================
+
+// Type guards
+export const isCaseStatus = (value: string): value is CaseStatus => {
+  return ['KYC Review', 'Pending Approval', 'Active', 'Rejected', 'Prospect'].includes(value);
+};
+
+export const isRiskLevel = (value: string): value is RiskLevel => {
+  return ['High', 'Medium', 'Low'].includes(value);
+};
+
+export const isDocStatus = (value: string): value is DocStatus => {
+  return ['Missing', 'Submitted', 'Verified', 'Rejected', 'Expired'].includes(value);
+};
+
+// Add these to your consolidated types file:
+
+export interface EnumItemConfig {
+  label: string;
+  color: string;
+  darkColor: string;
+  icon?: string;
+}
+
+export type EnumPayload = Record<string, EnumItemConfig> & {
+  _DEFAULT: EnumItemConfig;
+};
+
+export interface RoleConfig {
+  label: string;
+  permissions: Record<string, boolean>;
+}

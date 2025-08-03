@@ -8,8 +8,9 @@ import type {
   CaseDocumentLink,
   DocumentVersion,
   DocumentRequirements,
+  DocStatus
 } from '@/types/entities';
-import type { DocStatus } from '@/types/enums';
+
 import { getDocumentRequirements } from '@/lib/apiClient';
 
 /* ------------------------------------------------------------------ */

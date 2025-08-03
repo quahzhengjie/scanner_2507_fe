@@ -481,7 +481,7 @@ export function AddVersionForm({ onUpload, onScan, onCancel, scannerProfiles }: 
                                                     onChange={(e) => setScanFormat(e.target.value as 'png')}
                                                     className="w-4 h-4 text-blue-600 focus:ring-blue-500"
                                                 />
-                                                <Image size={16} className="text-blue-500" aria-hidden="true" />
+                                                <Image size={16} className="text-blue-500" aria-hidden="true"/>
                                                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">PNG</span>
                                             </label>
                                         </div>

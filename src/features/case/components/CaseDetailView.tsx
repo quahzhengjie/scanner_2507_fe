@@ -6,8 +6,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, Edit, UserPlus } from 'lucide-react';
-import type { Case, Party, Document, CaseDocumentLink, ScannerProfile, NewPartyData, DocumentVersion, CallReport } from '@/types/entities';
-import type { CaseStatus, RiskLevel } from '@/types/enums';
+import type { Case, Party, Document, CaseDocumentLink, ScannerProfile, NewPartyData, DocumentVersion, CallReport, CaseStatus, RiskLevel } from '@/types/entities';
 import { assignCase, updateCaseStatus, addActivityLog, updateEntityData, addCallReport, uploadDocument, triggerScan, getCaseDetails, updateDocumentStatus, updateDocumentLink, updateCallReport, deleteCallReport } from '@/lib/apiClient';
 import { RiskBadge } from '@/components/common/RiskBadge';
 import { StatusBadge } from '@/components/common/StatusBadge';
